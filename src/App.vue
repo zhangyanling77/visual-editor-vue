@@ -13,6 +13,11 @@ export default defineComponent({
   name: 'App',
   components: {
     VisualEditor,
+  },
+  data() {
+    return {
+      
+    }
   }
 });
 </script>
