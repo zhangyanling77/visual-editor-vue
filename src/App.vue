@@ -1,7 +1,7 @@
 <template>
-  <div class="app">
+  <div>
     <h1>这是页面内容</h1>
-    <visual-editor />
+    <visual-editor v-model="jsonData" />
   </div>
 </template>
 
@@ -16,7 +16,22 @@ export default defineComponent({
   },
   data() {
     return {
-      
+      jsonData: {
+        container: {
+          width: 800,
+          height: 500,
+        },
+        blocks: [
+          {
+            top: 100,
+            left: 100,
+          },
+          {
+            top: 200,
+            left: 200,
+          }
+        ]
+      }
     }
   }
 });
@@ -26,10 +41,5 @@ export default defineComponent({
 html, body {
   margin: 0;
   padding: 0;
-}
-.app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 </style>

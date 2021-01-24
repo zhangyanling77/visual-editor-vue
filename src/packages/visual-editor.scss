@@ -35,7 +35,7 @@ $primary: #1890ff; // 主色
     top: 0;
     bottom: 0;
     left: 0;
-    background-color: lightgreen;
+    background-color: white;
   }
 
   & > .visual-editor-head {
@@ -44,7 +44,6 @@ $primary: #1890ff; // 主色
     left: $menuSize;
     right: $operatorSize;
     height: $headSize;
-    background-color: lightcoral;
   }
 
   & > .visual-editor-operator {
@@ -53,7 +52,7 @@ $primary: #1890ff; // 主色
     bottom: 0;
     right: 0;
     width: $operatorSize;
-    background-color: lightblue;
+    background-color: white;
   }
 
   & > .visual-editor-body {
@@ -62,13 +61,27 @@ $primary: #1890ff; // 主色
     padding-right: $operatorSize;
     box-sizing: border-box;
     height: 100%;
-    background-color: lightpink;
+    background-color:rgba(255, 255, 255, 0.5);
+    position: relative;
+    z-index: 1;
 
     & > .visual-editor-content {
-      background-color: white;
       width: 100%;
       height: 100%;
-      overflow: auto;
+      display: flex;
+      justify-content: center;
+      // overflow: auto;
+
+      & > .visual-editor-container {
+        background-color: white;
+        flex-shrink: 0;
+        flex-grow: 0;
+        position: relative;
+
+        // .visual-editor-block {
+
+        // }
+      }
     }
   }
 
