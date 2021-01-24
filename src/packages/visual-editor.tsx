@@ -17,7 +17,7 @@ export const VisualEditor = defineComponent({
   setup(props, ctx) {
     /** 双向绑定值，容器中的组件数据 */
     const dataModel = useModel(() => props.modelValue, val => ctx.emit('update:modelValue', val));
-    // console.log('=====>', dataModel)
+    // console.log('dataModel: ', dataModel)
     const containerStyles = computed(() => ({
       width: `${dataModel.value.container.width}px`,
       height: `${dataModel.value.container.height}px`,

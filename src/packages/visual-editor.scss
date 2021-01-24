@@ -78,9 +78,9 @@ $primary: #1890ff; // 主色
         flex-grow: 0;
         position: relative;
 
-        // .visual-editor-block {
-
-        // }
+        .visual-editor-block {
+          position: absolute;
+        }
       }
     }
   }
