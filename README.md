@@ -1,5 +1,9 @@
 # visual-editor-vue
 
+## 使用组件 element-plus
+
+https://element-plus.gitee.io/#/zh-CN/component/installation
+
 ## Project setup
 ```
 yarn install
