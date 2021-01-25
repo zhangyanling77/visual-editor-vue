@@ -24,6 +24,8 @@ export function createVisualEditorConfig() {
   // 方便访问组件的
   const componentMap: Record<string, VisualEditorComponent> = {};
   return {
+    componentList,
+    componentMap,
     registry: (key: string, component: Omit<VisualEditorComponent, 'key'>) => {
       const comp = {...component, key }
       componentList.push(comp);
