@@ -43,12 +43,25 @@ $primary: #1890ff; // 主色
       width: calc(100% - 20px);
       margin: 20px 0 0 10px;
       border: 3px solid $ibcl;
-      min-height: 80px;
+      min-height: 120px;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 30px 20px;
+      padding: 0 20px;
       box-sizing: border-box;
+      &::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        content: '';
+        z-index: 2;
+      }
+      &:hover {
+        border-color: $primary;
+        cursor: move;
+      }
     }
     .visual-editor-menu-item-label {
       position: absolute;
@@ -68,6 +81,7 @@ $primary: #1890ff; // 主色
     left: $menuSize;
     right: $operatorSize;
     height: $headSize;
+    z-index: 9;
   }
 
   & > .visual-editor-operator {
