@@ -1,5 +1,5 @@
 import { computed, defineComponent, PropType } from 'vue';
-import { VisualEditorModelValue } from '@/packages/visual-editor.utils';
+import { VisualEditorConfig, VisualEditorModelValue } from '@/packages/visual-editor.utils';
 import { useModel } from '@/packages/utils/useModel';
 import { VisualEditorBlock } from '@/packages/visual-editor-block';
 import './visual-editor.scss';
@@ -7,6 +7,7 @@ import './visual-editor.scss';
 export const VisualEditor = defineComponent({
   props: {
     modelValue: { type: Object as PropType<VisualEditorModelValue>, required: true },
+    config: { type: Object as PropType<VisualEditorConfig>, required: true },
   },
   emits: {
     'update:modelValue': (val?: VisualEditorModelValue) => true,
