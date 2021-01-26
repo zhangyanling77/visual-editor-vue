@@ -77,12 +77,13 @@ export const VisualEditor = defineComponent({
       return {
         container: {
           onMousedown: (e: MouseEvent) => {
-            (dataModel.value.blocks || []).forEach(block => block.focus = false)
+            (dataModel.value.blocks || []).forEach(block => block.focus = false);
           },
         },
         block: {
           onMousedown: (e: MouseEvent, block: VisualEditorBlockData) => {
             e.stopPropagation();
+            e.preventDefault();
             block.focus = !block.focus;
           },
         },
