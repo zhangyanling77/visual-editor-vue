@@ -1,5 +1,5 @@
 import { computed, defineComponent, PropType, ref } from 'vue';
-import { createNewBlock, VisualEditorComponent, VisualEditorConfig, VisualEditorModelValue } from '@/packages/visual-editor.utils';
+import { createNewBlock, VisualEditorBlockData, VisualEditorComponent, VisualEditorConfig, VisualEditorModelValue } from '@/packages/visual-editor.utils';
 import { useModel } from '@/packages/utils/useModel';
 import { VisualEditorBlock } from '@/packages/visual-editor-block';
 import './visual-editor.scss';
@@ -73,6 +73,22 @@ export const VisualEditor = defineComponent({
       return blockHandler;
     })();
 
+    const focusHandler = (() => {
+      return {
+        container: {
+          onMousedown: (e: MouseEvent) => {
+            (dataModel.value.blocks || []).forEach(block => block.focus = false)
+          },
+        },
+        block: {
+          onMousedown: (e: MouseEvent, block: VisualEditorBlockData) => {
+            e.stopPropagation();
+            block.focus = !block.focus;
+          },
+        },
+      }
+    })();
+
     return () => (
       <div class="visual-editor">
         <div class="visual-editor-menu">
@@ -102,10 +118,18 @@ export const VisualEditor = defineComponent({
               class="visual-editor-container"
               style={containerStyles.value}
               ref={containerRef}
+              {...focusHandler.container}
             >
               {!!dataModel.value.blocks && (
                 dataModel.value.blocks.map((block, index) => (
-                  <VisualEditorBlock config={props.config} block={block} key={index} />
+                  <VisualEditorBlock
+                    config={props.config}
+                    block={block}
+                    key={index}
+                    {...{
+                      onMousedown: (e: MouseEvent) => focusHandler.block.onMousedown(e, block)
+                  }}
+                  />
                 ))
               )}
             </div>
