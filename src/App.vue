@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>这是页面内容</h1>
+    <!-- <h1>这是页面内容</h1> -->
     <visual-editor v-model="jsonData" :config="visualConfig" />
   </div>
 </template>
