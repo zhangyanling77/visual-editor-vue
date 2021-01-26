@@ -1,4 +1,5 @@
 export interface VisualEditorBlockData {
+  componentKey: string;
   top: number;
   left: number;
 }
@@ -12,7 +13,7 @@ export interface VisualEditorModelValue {
 }
   
 export interface VisualEditorComponent {
-  key?: string;
+  key: string;
   label: string;
   preview: () => JSX.Element;
   render: () => JSX.Element;
