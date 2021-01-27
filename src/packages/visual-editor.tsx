@@ -101,6 +101,7 @@ export const VisualEditor = defineComponent({
       return {
         container: {
           onMousedown: (e: MouseEvent) => {
+            /*点击空白处，清空所有选中的block */
             methods.clearFocus();
           },
         },
@@ -108,45 +109,58 @@ export const VisualEditor = defineComponent({
           onMousedown: (e: MouseEvent, block: VisualEditorBlockData) => {
             e.stopPropagation();
             e.preventDefault();
-            // 按住shift多选focus
             if (e.shiftKey) {
-              block.focus = !block.focus;
+              /*如果摁住了shift键，如果此时没有选中的block，就选中这个block，否则令这个block的选中状态取反*/
+              if (focusData.value.focus.length <= 1) {
+                  block.focus = true
+              } else {
+                  block.focus = !block.focus
+              }
             } else {
-              block.focus = true;
-              methods.clearFocus(block);
+              /*如果点击的这个block没有被选中，才清空其他选中的block，否则不做任何事情。防止拖拽多个block，取消其他block的选中状态*/
+              if (!block.focus) {
+                block.focus = true;
+                methods.clearFocus(block);
+              }
             }
+            blockDraggier.mousedown(e);
           },
         },
       }
     })();
     /*处理block在container中拖拽移动的相关动作 */
-    // const blockDraggier = (() => {
-    //   let dragState = {
-    //     startX: 0,
-    //     startY: 0,
-    //     startPos: [] as {left: number, top: number}[];
-    //   };
-    //   const mousedown = (e: MouseEvent) => {
-    //     dragState = {
-    //       startX: e.clientX,
-    //       startY: e.clientY,
-    //     }
-    //     document.addEventListener('mousemove', mousemove);
-    //     document.addEventListener('mouseup', mouseup);
-    //   }
+    const blockDraggier = (() => {
+      let dragState = {
+        startX: 0,
+        startY: 0,
+        startPos: [] as { top: number, left: number }[],
+      };
+      const mousedown = (e: MouseEvent) => {
+        dragState = {
+          startX: e.clientX,
+          startY: e.clientY,
+          startPos: focusData.value.focus.map(({ top, left }) => ({ top, left })),
+        }
+        document.addEventListener('mousemove', mousemove);
+        document.addEventListener('mouseup', mouseup);
+      }
 
-    //   const mousemove = (e: MouseEvent) => {
-    //     const durX = e.clientX - dragState.startX;
-    //     const durY = e.clientY - dragState.startY;
-    //   }
+      const mousemove = (e: MouseEvent) => {
+        const durX = e.clientX - dragState.startX;
+        const durY = e.clientY - dragState.startY;
+        focusData.value.focus.forEach((block, index) => {
+          block.top = dragState.startPos[index].top + durY;
+          block.left = dragState.startPos[index].left + durX;
+        });
+      }
 
-    //   const mouseup = (e: MouseEvent) => {
-    //     document.removeEventListener('mousemove', mousemove);
-    //     document.removeEventListener('mouseup', mouseup);
-    //   }
+      const mouseup = (e: MouseEvent) => {
+        document.removeEventListener('mousemove', mousemove);
+        document.removeEventListener('mouseup', mouseup);
+      }
 
-    //   return mousedown;
-    // })();
+      return { mousedown };
+    })();
 
     return () => (
       <div class="visual-editor">
