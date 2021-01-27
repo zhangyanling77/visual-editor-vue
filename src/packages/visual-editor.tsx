@@ -18,12 +18,24 @@ export const VisualEditor = defineComponent({
   setup(props, ctx) {
     /** 双向绑定值，容器中的组件数据 */
     const dataModel = useModel(() => props.modelValue, val => ctx.emit('update:modelValue', val));
+    /*conainer节点dom对象的引用 */
     const containerRef = ref({} as HTMLDivElement);
+    /*container节点的style样式对象 */
     const containerStyles = computed(() => ({
       width: `${dataModel.value.container.width}px`,
       height: `${dataModel.value.container.height}px`,
     }));
-    /*对外暴露的一些方法*/
+    /*计算选中与未选中的block数据 */
+    const focusData = computed(() => {
+      let focus: VisualEditorBlockData[] = [];
+      let unFocus: VisualEditorBlockData[] = [];
+      (dataModel.value.blocks || []).forEach(block => (block.focus ? focus : unFocus).push(block));
+      return {
+        focus, // 此时选中的数据
+        unFocus, // 此时未选中的数据
+      }
+    });
+    /*对外暴露的一些方法 */
     const methods = {
       clearFocus: (block?: VisualEditorBlockData) => {
         let blocks = (dataModel.value.blocks || []);
@@ -34,7 +46,7 @@ export const VisualEditor = defineComponent({
         blocks.forEach(block => block.focus = false);
       },
     };
-    /*处理从菜单拖拽组件到容器的相关动作*/
+    /*处理从菜单拖拽组件到容器的相关动作 */
     const menuDraggier = (() => {
       let component = null as null | VisualEditorComponent;
       const blockHandler = {
@@ -107,9 +119,33 @@ export const VisualEditor = defineComponent({
         },
       }
     })();
-
+    /*处理block在container中拖拽移动的相关动作 */
     // const blockDraggier = (() => {
+    //   let dragState = {
+    //     startX: 0,
+    //     startY: 0,
+    //     startPos: [] as {left: number, top: number}[];
+    //   };
+    //   const mousedown = (e: MouseEvent) => {
+    //     dragState = {
+    //       startX: e.clientX,
+    //       startY: e.clientY,
+    //     }
+    //     document.addEventListener('mousemove', mousemove);
+    //     document.addEventListener('mouseup', mouseup);
+    //   }
 
+    //   const mousemove = (e: MouseEvent) => {
+    //     const durX = e.clientX - dragState.startX;
+    //     const durY = e.clientY - dragState.startY;
+    //   }
+
+    //   const mouseup = (e: MouseEvent) => {
+    //     document.removeEventListener('mousemove', mousemove);
+    //     document.removeEventListener('mouseup', mouseup);
+    //   }
+
+    //   return mousedown;
     // })();
 
     return () => (
