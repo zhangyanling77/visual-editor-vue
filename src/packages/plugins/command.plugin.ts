@@ -26,10 +26,10 @@ export function useCommander() {
   const registry = (command: Command) => {
     state.commands[command.name] = (...args) => {
       const { undo, redo } = command.execute(...args);
-      if (command.followQueue) {
-        state.queue.push({ undo, redo });
-        state.current += 1;
-      }
+      if (command.followQueue === false) return;
+      let { queue, current } = state;
+      queue.push({ undo, redo });
+      state.current = current + 1;
       redo();
     }
   };
@@ -71,5 +71,5 @@ export function useCommander() {
     },
   });
 
-  return { registry }
+  return { registry, state }
 }
