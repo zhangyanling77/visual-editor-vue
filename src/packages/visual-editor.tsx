@@ -23,6 +23,18 @@ export const VisualEditor = defineComponent({
       width: `${dataModel.value.container.width}px`,
       height: `${dataModel.value.container.height}px`,
     }));
+    /*对外暴露的一些方法*/
+    const methods = {
+      clearFocus: (block?: VisualEditorBlockData) => {
+        let blocks = (dataModel.value.blocks || []);
+        if (blocks.length === 0) return;
+        if (!!block) {
+          blocks = blocks.filter(item => item !== block);
+        }
+        blocks.forEach(block => block.focus = false);
+      },
+    };
+    /*处理从菜单拖拽组件到容器的相关动作*/
     const menuDraggier = (() => {
       let component = null as null | VisualEditorComponent;
       const blockHandler = {
@@ -72,23 +84,33 @@ export const VisualEditor = defineComponent({
       };
       return blockHandler;
     })();
-
+    /*处理block选中的相关动作*/
     const focusHandler = (() => {
       return {
         container: {
           onMousedown: (e: MouseEvent) => {
-            (dataModel.value.blocks || []).forEach(block => block.focus = false);
+            methods.clearFocus();
           },
         },
         block: {
           onMousedown: (e: MouseEvent, block: VisualEditorBlockData) => {
             e.stopPropagation();
             e.preventDefault();
-            block.focus = !block.focus;
+            // 按住shift多选focus
+            if (e.shiftKey) {
+              block.focus = !block.focus;
+            } else {
+              block.focus = true;
+              methods.clearFocus(block);
+            }
           },
         },
       }
     })();
+
+    // const blockDraggier = (() => {
+
+    // })();
 
     return () => (
       <div class="visual-editor">
