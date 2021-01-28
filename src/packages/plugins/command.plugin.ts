@@ -18,18 +18,20 @@ export interface CommandManager {
 }
 
 export function useCommander() {
+
   const state = reactive({
     current: -1,
     queue: [] as CommandExecute[],
     commands: {} as Record<string, (...args: any[]) => void>,
   });
+  // 注册命令
   const registry = (command: Command) => {
     state.commands[command.name] = (...args) => {
       const { undo, redo } = command.execute(...args);
-      if (command.followQueue === false) return;
-      let { queue, current } = state;
-      queue.push({ undo, redo });
-      state.current = current + 1;
+      if (command.followQueue !== false) {
+        state.queue.push({ undo, redo });
+        state.current += 1;
+      }
       redo();
     }
   };
@@ -41,11 +43,12 @@ export function useCommander() {
     execute: () => {
       return {
         redo: () => {
-          let { current } = state;
-          if (current === -1) return;
-          const { undo } = state.queue[current];
-          !!undo && undo();
-          state.current -= 1;
+          if (state.current === -1) return;
+          const queueItem = state.queue[state.current];
+          if (!!queueItem) {
+            !!queueItem.undo && queueItem.undo();
+            state.current--;
+          }
         },
       }
     },
@@ -61,11 +64,11 @@ export function useCommander() {
     execute: () => {
       return {
         redo: () => {
-          let { current } = state;
-          if (!state.queue[current]) return;
-          const { redo } = state.queue[current];
-          redo();
-          state.current += 1;
+          const queueItem = state.queue[state.current + 1];
+          if (!!queueItem) {
+            queueItem.redo();
+            state.current++;
+          }
         }
       }
     },
