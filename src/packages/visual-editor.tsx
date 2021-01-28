@@ -46,6 +46,9 @@ export const VisualEditor = defineComponent({
         }
         blocks.forEach(block => block.focus = false);
       },
+      updateBlocks: (blocks: VisualEditorBlockData[]) => {
+        dataModel.value = { ...dataModel.value, blocks };
+      },
     };
     /*处理从菜单拖拽组件到容器的相关动作 */
     const menuDraggier = (() => {
@@ -162,8 +165,12 @@ export const VisualEditor = defineComponent({
 
       return { mousedown };
     })();
-
-    const commander = useVisualCommand();
+    
+    const commander = useVisualCommand({
+      focusData,
+      updateBlocks: methods.updateBlocks,
+      dataModel
+    });
 
     const buttons = [
       {label: '撤销', icon: 'icon-back', handler: commander.undo, tip: 'ctrl+z'},
