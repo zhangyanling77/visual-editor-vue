@@ -1,7 +1,22 @@
 import { useCommander } from "./plugins/command.plugin";
+import { VisualEditorBlockData } from "./visual-editor.utils";
+import { VisualEditorModelValue } from '@/packages/visual-editor.utils';
 
 // 注册命令
-export function useVisualCommand() {
+export function useVisualCommand({
+  focusData,
+  updateBlocks,
+  dataModel,
+}: {
+  focusData: {
+    value: {
+      focus: VisualEditorBlockData[],
+      unFocus: VisualEditorBlockData[],
+    }
+  },
+  updateBlocks: (blocks: VisualEditorBlockData[]) => void,
+  dataModel: { value: VisualEditorModelValue },
+}) {
   const commander = useCommander();
 
   commander.registry({
@@ -12,13 +27,16 @@ export function useVisualCommand() {
       'ctrl+d'
     ],
     execute: () => {
-      console.log('执行删除命令')
+      let data = {
+        before: dataModel.value.blocks || [],
+        after: focusData.value.unFocus,
+      }
       return {
-        undo: () => {
-          console.log('撤回删除命令')
-        },
         redo: () => {
-          console.log('重做删除命令')
+          updateBlocks(data.after);
+        },
+        undo: () => {
+          updateBlocks(data.before);
         },
       }
     }
