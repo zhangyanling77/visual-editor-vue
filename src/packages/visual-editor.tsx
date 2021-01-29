@@ -106,14 +106,15 @@ export const VisualEditor = defineComponent({
         container: {
           onMousedown: (e: MouseEvent) => {
             e.preventDefault();
-            /*点击空白处，清空所有选中的block */
-            methods.clearFocus();
+            if (e.currentTarget !== e.target) return;
+            if (!e.shiftKey) {
+              /*点击空白处，清空所有选中的block */
+              methods.clearFocus();
+            }
           },
         },
         block: {
           onMousedown: (e: MouseEvent, block: VisualEditorBlockData) => {
-            e.stopPropagation();
-            e.preventDefault();
             if (e.shiftKey) {
               /*如果摁住了shift键，如果此时没有选中的block，就选中这个block，否则令这个block的选中状态取反*/
               if (focusData.value.focus.length <= 1) {
