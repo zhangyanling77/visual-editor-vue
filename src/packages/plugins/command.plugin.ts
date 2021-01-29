@@ -1,4 +1,5 @@
 import { reactive, onUnmounted } from 'vue';
+import { KeyboardCode } from '@/packages/plugins/keyboard-code';
 
 export interface CommandExecute {
   undo?: () => void;
@@ -11,7 +12,7 @@ export interface Command {
   execute: (...args: any[]) => CommandExecute; // 命令被执行的时候，所做的内容
   followQueue?: boolean; // 命令执行完之后，是否需要将命令执行得到的undo、redo存入命令队列
   init?: () => (() => void | undefined); // 命令初始化函数
-  data?: any;
+  data?: any; // 命令缓存所需要的数据
 }
 
 export interface CommandManager {
@@ -50,6 +51,33 @@ export function useCommander() {
       state.current = current + 1;
     }
   };
+
+  const keyboardEvent = (() => {
+    const onKeydown = (e: KeyboardEvent) => {
+      if (document.activeElement !== document.body) return;
+      const { keyCode, shiftKey, altKey, ctrlKey, metaKey } = e;
+      let keyString: string[] = [];
+      if (ctrlKey) keyString.push('ctrl');
+      if (shiftKey) keyString.push('shift');
+      if (altKey) keyString.push('alt');
+      keyString.push(KeyboardCode[keyCode]);
+      const keyNames = keyString.join('+');
+      state.commandArray.forEach(({ keyboard, name }) => {
+        if (!keyboard) return;
+        const keys = Array.isArray(keyboard) ? keyboard : [keyboard];
+        if (keys.indexOf(keyNames) > -1) {
+          state.commands[name]();
+          e.stopPropagation();
+          e.preventDefault();
+        }
+      });
+    };
+    const init = () => {
+      window.addEventListener('keydown', onKeydown);
+      return () => window.removeEventListener('keydown', onKeydown);
+    };
+    return init;
+  })();
   /**
    * useCommander初始化函数，负责初始化键盘监听事件，调用命令的初始化逻辑
    */
@@ -59,6 +87,7 @@ export function useCommander() {
     };
     window.addEventListener('keydown', onKeydown);
     state.commandArray.forEach(command => !!command.init && state.destroyList.push(command.init()));
+    state.destroyList.push(keyboardEvent());
     state.destroyList.push(() => window.removeEventListener('keydown', onKeydown));
   };
   
