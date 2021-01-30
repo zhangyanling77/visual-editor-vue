@@ -96,13 +96,67 @@ export function useVisualCommand({
     }
   });
 
+  commander.registry({
+    name: 'placeTop',
+    keyboard: 'ctrl+up',
+    execute: () => {
+      let data = {
+        before: deepcopy(dataModel.value.blocks || []),
+        after: deepcopy((() => {
+          const { focus, unFocus } = focusData.value;
+          const maxZIndex = unFocus.reduce((prev, block) => Math.max(prev, block.zIndex), -Infinity) + 1;
+          focus.forEach(block => block.zIndex = maxZIndex);
+          return deepcopy(dataModel.value.blocks || []);
+        })()),
+      };
+      return {
+        redo: () => {
+          updateBlocks(deepcopy(data.after));
+        },
+        undo: () => {
+          updateBlocks(deepcopy(data.before));
+        },
+      }
+    },
+  });
+
+  commander.registry({
+    name: 'placeBottom',
+    keyboard: 'ctrl+down',
+    execute: () => {
+      let data = {
+        before: deepcopy(dataModel.value.blocks || []),
+        after: deepcopy((() => {
+          const { focus, unFocus } = focusData.value;
+          let minZIndex = unFocus.reduce((prev, block) => Math.min(prev, block.zIndex), Infinity) - 1;
+          if (minZIndex < 0) {
+            const dur = Math.abs(minZIndex);
+            unFocus.forEach(block => block.zIndex += dur);
+            minZIndex = 0;
+          }
+          focus.forEach(block => block.zIndex = minZIndex);
+          return deepcopy(dataModel.value.blocks || []);
+        })()),
+      };
+      return {
+        redo: () => {
+          updateBlocks(deepcopy(data.after));
+        },
+        undo: () => {
+          updateBlocks(deepcopy(data.before));
+        },
+      }
+    },
+  });
+
   commander.init();
 
   return {
     undo: () => commander.state.commands.undo(),
     redo: () => commander.state.commands.redo(),
     delete: () => commander.state.commands.delete(),
-    drag: () => commander.state.commands.drag(),
     clear: () => commander.state.commands.clear(),
+    placeTop: () => commander.state.commands.placeTop(),
+    placeBottom: () => commander.state.commands.placeBottom(),
   }
 }
