@@ -9,7 +9,7 @@ import {
 import { useModel } from '@/packages/utils/useModel';
 import { VisualEditorBlock } from '@/packages/visual-editor-block';
 import './visual-editor.scss';
-import { useVisualCommand } from './visual.command';
+import { useVisualCommand } from './plugins/visual.command';
 import { createEvent } from './plugins/event';
 
 export const VisualEditor = defineComponent({

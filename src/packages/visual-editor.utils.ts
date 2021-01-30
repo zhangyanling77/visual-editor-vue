@@ -57,4 +57,3 @@ export function createVisualEditorConfig() {
 }
 
 export type VisualEditorConfig = ReturnType<typeof createVisualEditorConfig>
-  

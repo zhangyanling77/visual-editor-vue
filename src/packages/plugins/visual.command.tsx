@@ -1,5 +1,5 @@
-import { useCommander } from "./plugins/command.plugin";
-import { VisualEditorBlockData, VisualEditorModelValue } from "./visual-editor.utils";
+import { useCommander } from "./command.plugin";
+import { VisualEditorBlockData, VisualEditorModelValue } from "../visual-editor.utils";
 import deepcopy from 'deepcopy';
 
 // 注册命令
