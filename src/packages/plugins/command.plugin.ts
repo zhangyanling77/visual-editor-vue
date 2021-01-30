@@ -57,7 +57,7 @@ export function useCommander() {
       if (document.activeElement !== document.body) return;
       const { keyCode, shiftKey, altKey, ctrlKey, metaKey } = e;
       let keyString: string[] = [];
-      if (ctrlKey) keyString.push('ctrl');
+      if (ctrlKey || metaKey) keyString.push('ctrl');
       if (shiftKey) keyString.push('shift');
       if (altKey) keyString.push('alt');
       keyString.push(KeyboardCode[keyCode]);

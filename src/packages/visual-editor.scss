@@ -9,15 +9,15 @@ $ibcl: #ebeef5; // border color light 边框颜色：轻
 $itc: #314659; // text color 字体颜色
 $icc: rgba(0, 0, 0, 0.45); // icon color 图标颜色
 $boxShadowColor: #f0f1f2; // 阴影颜色
-
-$primary: #eb2f96; // #13c2c2; // 主色
+// 主色
+$primary: #eb2f96; // #13c2c2 #1890ff #f5222d #fa8c16 #fa541c #722ed1
 
 .visual-editor {
   position: fixed;
-  top: 20px;
-  bottom: 20px;
-  left: 20px;
-  right: 20px;
+  top: 10px;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
   background-color: white;
 
   &::before {
@@ -38,6 +38,8 @@ $primary: #eb2f96; // #13c2c2; // 主色
     left: 0;
     background-color: white;
     z-index: 9;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
 
     .visual-editor-menu-item {
       position: relative;
@@ -50,6 +52,7 @@ $primary: #eb2f96; // #13c2c2; // 主色
       justify-content: center;
       padding: 0 20px;
       box-sizing: border-box;
+
       &::after {
         position: absolute;
         top: 0;
@@ -133,6 +136,8 @@ $primary: #eb2f96; // #13c2c2; // 主色
     width: $operatorSize;
     background-color: white;
     z-index: 9;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
   }
 
   & > .visual-editor-body {
@@ -144,6 +149,7 @@ $primary: #eb2f96; // #13c2c2; // 主色
     background-color:rgba(255, 255, 255, 0.5);
     position: relative;
     z-index: 1;
+    border-radius: 4px;
 
     & > .visual-editor-content {
       width: 100%;
@@ -176,6 +182,20 @@ $primary: #eb2f96; // #13c2c2; // 主色
               border: 1px dashed $primary;
             }
           }
+        }
+        
+        .visual-editor-mark-line-y {
+          position: absolute;
+          left: 0;
+          right: 0;
+          border-top: dashed 1px $primary;
+        }
+
+        .visual-editor-mark-line-x {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          border-left: dashed 1px $primary;
         }
       }
     }
