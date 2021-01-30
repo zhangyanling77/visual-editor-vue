@@ -11,6 +11,8 @@ import { VisualEditorBlock } from '@/packages/visual-editor-block';
 import './visual-editor.scss';
 import { useVisualCommand } from './plugins/visual.command';
 import { createEvent } from './plugins/event';
+import { $$dialog } from '@/packages/utils/dialog-service';
+import { ElMessageBox } from 'element-plus';
 
 export const VisualEditor = defineComponent({
   props: {
@@ -188,6 +190,21 @@ export const VisualEditor = defineComponent({
     const buttons = [
       {label: '撤销', icon: 'icon-back', handler: commander.undo, tip: 'ctrl+z'},
       {label: '重做', icon: 'icon-forward', handler: commander.redo, tip: 'ctrl+y, ctrl+shift+z'},
+      {
+        label: '导入', icon: 'icon-import', handler: async () => {
+          const text = await $$dialog.textarea('', '请输入导入的JSON字符串');
+          try {
+            const data = JSON.parse(text || '');
+            dataModel.value = data;
+          } catch (e) {
+            console.log(e)
+            ElMessageBox.alert('解析JSON字符串出错')
+          }
+        },
+      },
+      {
+        label: '导出', icon: 'icon-export', handler: () => $$dialog.textarea(JSON.stringify(dataModel.value), '导出的JSON数据', { editReadonly: true })
+      },
       {label: '删除', icon: 'icon-delete', handler: () => commander.delete(), tip: 'ctrl+d, backspace, delete'},
       {label: '清空', icon: 'icon-reset', handler: () => commander.clear()},
     ];
