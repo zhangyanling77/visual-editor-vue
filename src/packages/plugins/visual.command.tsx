@@ -65,7 +65,7 @@ export function useVisualCommand({
       }
     },
     execute() {
-      let before = this.data.before;
+      let before = deepcopy(this.data.before);
       let after = deepcopy(dataModel.value.blocks || []);
       return {
         redo: () => {
@@ -175,6 +175,37 @@ export function useVisualCommand({
     }
   });
 
+  commander.registry({
+    name: 'updateModelvalue',
+    execute: (val: VisualEditorModelValue) => {
+      let data = {
+        before: deepcopy(dataModel.value),
+        after: deepcopy(val),
+      };
+      return {
+        redo: () => {
+          dataModel.value = data.after;
+        },
+        undo: () => {
+          dataModel.value = data.before;
+        },
+      }
+    }
+  });
+
+  commander.registry({
+    name: 'selectAll',
+    followQueue: false,
+    keyboard: 'ctrl+a',
+    execute: () => {
+      return {
+        redo: () => {
+          (dataModel.value.blocks || []).forEach(block => block.focus = true);
+        },
+      }
+    },
+  })
+
   commander.init();
 
   return {
@@ -185,5 +216,6 @@ export function useVisualCommand({
     placeTop: () => commander.state.commands.placeTop(),
     placeBottom: () => commander.state.commands.placeBottom(),
     updateBlock: (newBlock: VisualEditorBlockData, oldBlock: VisualEditorBlockData) => commander.state.commands.updateBlock(newBlock, oldBlock),
+    updateModelvalue: (val: VisualEditorModelValue) => commander.state.commands.updateModelvalue(val),
   }
 }

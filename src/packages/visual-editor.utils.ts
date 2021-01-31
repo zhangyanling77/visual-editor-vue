@@ -1,4 +1,5 @@
 import { VisualEditorProps } from "./visual-editor.props";
+import { inject, provide } from 'vue';
 
 export interface VisualEditorBlockData {
   componentKey: string; // 映射映射 VisualEditorConfig 中 componentMap 的 component对象
@@ -11,6 +12,8 @@ export interface VisualEditorBlockData {
   height: number; // 组件高度
   hasResize: boolean; // 是否调整过宽高
   props: Record<string, any>; // 组件的设计属性
+  model: Record<string, string>; // 绑定的字段
+  slotName?: string; // 组件唯一标识
 }
 
 export interface VisualEditorModelValue {
@@ -25,8 +28,15 @@ export interface VisualEditorComponent {
   key: string;
   label: string;
   preview: () => JSX.Element;
-  render: () => JSX.Element;
+  render: (data: {
+    props: any,
+    model: any,
+    size: { width?: number, height?: number },
+    custom: Record<string, any>,
+  }) => JSX.Element;
   props?: Record<string, VisualEditorProps>,
+  model?: Record<string, string>,
+  resize?: { width?: boolean, height?: boolean },
 }
 
 export interface VisualEditorMarkLines {
@@ -55,8 +65,34 @@ export function createNewBlock (
       height: 0,
       hasResize: false,
       props: {},
+      model: {},
     }
 }
+
+export interface VisualDragEvent {
+  dragstart: {
+    on: (cb: () => void) => void;
+    off: (cb: () => void) => void;
+    emit: () => void;
+  },
+  dragend: {
+    on: (cb: () => void) => void;
+    off: (cb: () => void) => void;
+    emit: () => void;
+  },
+}
+
+export const VisualDragProvider = (() => {
+  const VISUAL_DRAG_PROVIDER = '@@VISUAL_DRAG_PROVIDER';
+  return {
+    provide: (data: VisualDragEvent) => {
+      provide(VISUAL_DRAG_PROVIDER, data);
+    },
+    inject: () => {
+      return inject(VISUAL_DRAG_PROVIDER) as VisualDragEvent;
+    },
+  }
+})();
 
 export function createVisualEditorConfig() {
   // 菜单列表显示的
@@ -66,11 +102,26 @@ export function createVisualEditorConfig() {
   return {
     componentList,
     componentMap,
-    registry: (key: string, component: Omit<VisualEditorComponent, 'key'>) => {
-      const comp = {...component, key }
-      componentList.push(comp);
-      componentMap[key] = comp;
-    }
+    registry: <_,
+      Props extends Record<string, VisualEditorProps> = {},
+      Model extends Record<string, string> = {},
+      >(key: string, component: {
+      label: string,
+      preview: () => JSX.Element,
+      render: (data: {
+          props: { [k in keyof Props]: any },
+          model: Partial<{ [k in keyof Model]: any }>,
+          size: { width?: number, height?: number },
+          custom: Record<string, any>,
+      }) => JSX.Element,
+      props?: Props,
+      model?: Model,
+      resize?: { width?: boolean, height?: boolean },
+  }) => {
+      let comp = {...component, key}
+      componentList.push(comp)
+      componentMap[key] = comp
+  }
   }
 }
 
