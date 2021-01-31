@@ -1,3 +1,5 @@
+import { VisualEditorProps } from "./visual-editor.props";
+
 export interface VisualEditorBlockData {
   componentKey: string; // 映射映射 VisualEditorConfig 中 componentMap 的 component对象
   top: number; // 组件的top定位
@@ -8,6 +10,7 @@ export interface VisualEditorBlockData {
   width: number; // 组件宽度
   height: number; // 组件高度
   hasResize: boolean; // 是否调整过宽高
+  props: Record<string, any>; // 组件的设计属性
 }
 
 export interface VisualEditorModelValue {
@@ -23,6 +26,7 @@ export interface VisualEditorComponent {
   label: string;
   preview: () => JSX.Element;
   render: () => JSX.Element;
+  props?: Record<string, VisualEditorProps>,
 }
 
 export interface VisualEditorMarkLines {
@@ -50,6 +54,7 @@ export function createNewBlock (
       width: 0,
       height: 0,
       hasResize: false,
+      props: {},
     }
 }
 
