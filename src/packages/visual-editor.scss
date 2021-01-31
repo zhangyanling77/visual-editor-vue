@@ -6,7 +6,7 @@ $menuSize: 275px; // 菜单列表的宽度
 $operatorSize: 275px; // 右侧编辑详情的宽度
 
 $ibc: #dcdfe6; // border color边框颜色
-$ibl: #ebeef5; // border color light 边框颜色：轻
+$ibcl: #ebeef5; // border color light 边框颜色：轻
 $itc: #314659; // text color，字体颜色
 $icc: rgba(0, 0, 0, 0.45); // icon color，图标颜色
 $boxShadowColor: #f0f1f2; // 阴影的颜色
@@ -29,7 +29,7 @@ $primary: #eb2f96; // #13c2c2 #1890ff #f5222d #fa8c16 #fa541c #722ed1
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(black, 0.1);
+    background-color: rgb(0, 0, 0, 0.1);
     content: '';
   }
 
@@ -42,7 +42,7 @@ $primary: #eb2f96; // #13c2c2 #1890ff #f5222d #fa8c16 #fa541c #722ed1
 
     &::-webkit-scrollbar-thumb {
       border-radius: 1em;
-      background-color: rgba(black, 0.15);
+      background-color: rgba(0, 0, 0, 0.15);
     }
 
     &::-webkit-scrollbar-track {
@@ -61,18 +61,19 @@ $primary: #eb2f96; // #13c2c2 #1890ff #f5222d #fa8c16 #fa541c #722ed1
     z-index: 9;
     overflow-y: auto;
     padding-bottom: 300px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
 
     .visual-editor-menu-item {
       position: relative;
       width: calc(100% - 20px);
-      margin-left: 10px;
-      border: solid 1px $ibl;
-      margin-top: 20px;
+      margin: 20px 0 0 10px;
+      border: 1px solid $ibcl;
       min-height: 120px;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0px 20px;
+      padding: 0 20px;
       box-sizing: border-box;
 
       &:after {
@@ -121,12 +122,12 @@ $primary: #eb2f96; // #13c2c2 #1890ff #f5222d #fa8c16 #fa541c #722ed1
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background-color: rgba(black, 0.3);
+      background-color: rgba($primary, 0.4);
       color: white;
       height: 60px;
       width: 60px;
       cursor: pointer;
-      transition: all 300ms linear;
+      transition: all 0.3s linear;
 
       & + .visual-editor-head-button {
         margin-left: 1px;
@@ -167,6 +168,8 @@ $primary: #eb2f96; // #13c2c2 #1890ff #f5222d #fa8c16 #fa541c #722ed1
     z-index: 9;
     padding: 20px 10px 300px 10px;
     box-sizing: border-box;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
 
     .el-input, .el-select, .el-input-number {
       width: 100%;
@@ -179,9 +182,10 @@ $primary: #eb2f96; // #13c2c2 #1890ff #f5222d #fa8c16 #fa541c #722ed1
     padding-right: $operatorSize;
     box-sizing: border-box;
     height: 100%;
-    background-color: rgba(white, 0.5);
+    background-color: rgba(255, 255, 255, 0.5);
     position: relative;
     z-index: 1;
+    border-radius: 4px;
 
     & > .visual-editor-content {
       height: 100%;
@@ -199,11 +203,9 @@ $primary: #eb2f96; // #13c2c2 #1890ff #f5222d #fa8c16 #fa541c #722ed1
         box-sizing: border-box;
 
         .visual-editor-block {
-
           .el-button, .el-input {
             transition: none;
           }
-
           &:after {
             $space: 3px;
             position: absolute;
@@ -230,7 +232,7 @@ $primary: #eb2f96; // #13c2c2 #1890ff #f5222d #fa8c16 #fa541c #722ed1
 
     &.visual-editor-block-focus {
       &:after {
-        border: dashed 1px $primary;
+        border: 1px dashed $primary;
       }
     }
   }
@@ -239,14 +241,14 @@ $primary: #eb2f96; // #13c2c2 #1890ff #f5222d #fa8c16 #fa541c #722ed1
     position: absolute;
     left: 0;
     right: 0;
-    border-top: dashed 1px $primary;
+    border-top: 1px dashed $primary;
   }
 
   .visual-editor-mark-line-x {
     position: absolute;
     top: 0;
     bottom: 0;
-    border-left: dashed 1px $primary;
+    border-left: 1px dashed $primary;
   }
 }
 
