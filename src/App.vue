@@ -11,9 +11,9 @@
         <el-tag v-else>自定义的标签</el-tag>
       </template>-->
     </visual-editor>
-    <div style="text-align:center;">
+    <!-- <div style="text-align:center;">
       {{JSON.stringify(formData)}}
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -21,7 +21,7 @@
 import { defineComponent } from 'vue';
 import { VisualEditor } from '@/packages/visual-editor';
 import { visualConfig } from '@/visual.config';
-import jsonData from './data.json';
+// import jsonData from './data.json';
 
 export default defineComponent({
   name: 'App',
@@ -31,7 +31,12 @@ export default defineComponent({
   data() {
     return {
       visualConfig,
-      jsonData,
+      jsonData: {
+        container: {
+          width: 800,
+          height: 500,
+        },
+      },
       formData: {
         username: 'admin',
       },
